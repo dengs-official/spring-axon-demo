@@ -1,12 +1,5 @@
 package com.example.cqrs.demo;
 
-import com.example.cqrs.demo.command.CreateAccountCommand;
-import com.example.cqrs.demo.command.WithdrawMoneyCommand;
-import com.example.cqrs.demo.domain.AccountId;
-import com.example.cqrs.demo.domain.BankAccountAggregate;
-import org.axonframework.config.Configuration;
-import org.axonframework.config.DefaultConfigurer;
-import org.axonframework.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;

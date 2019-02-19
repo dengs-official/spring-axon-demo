@@ -23,7 +23,6 @@ import com.example.cqrs.demo.command.WithdrawMoneyCommand;
 import com.example.cqrs.demo.event.AccountCreatedEvent;
 import com.example.cqrs.demo.event.MoneyWithdrawnEvent;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
@@ -56,19 +55,19 @@ import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 @Aggregate
 @Data
 @Slf4j
-public class BankAccountAggregate {
+public class AccountAggregate {
 
     @AggregateIdentifier
     private AccountId accountId;
     private String accountName;
     private BigDecimal balance;
 
-    public BankAccountAggregate() {
+    public AccountAggregate() {
         super();
     }
 
     @CommandHandler
-    public BankAccountAggregate(CreateAccountCommand command) {
+    public AccountAggregate(CreateAccountCommand command) {
         log.debug("Construct a new BankAccount");
         apply(new AccountCreatedEvent(command.getAccountId(), command.getAccountName(), command.getAmount()));
     }

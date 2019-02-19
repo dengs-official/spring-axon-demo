@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -55,21 +54,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 @Api(tags = "Bank Account RESTful APIs")
-public class BankAccountController {
+public class AccountController {
 
     @Autowired
     public CommandGateway commandGateway;
 
     @ApiOperation(value = "Create Bank Account")
     @GetMapping(value = "/create")
-    public ResponseEntity<JSONObject> createAccount(@RequestParam String accountName, @RequestParam Long amount) {
-      log.info("Start to create bank account {}", accountName);
+    public ResponseEntity<JSONObject> createAccount(@RequestParam String account, @RequestParam Long amount) {
+      log.info("Start to create bank account {}", account);
 
       AccountId id = new AccountId();
       ResponseEntity<JSONObject> response = new ResponseEntity<>(HttpStatus.OK);
       JSONObject result = new JSONObject();
       try {
-          result.put("data", commandGateway.sendAndWait(new CreateAccountCommand(id, accountName, amount)));
+          result.put("data", commandGateway.sendAndWait(new CreateAccountCommand(id, account, amount)));
       } catch (Exception e) {
           log.error("When create account occur error", e);
           result.put("message", e);

@@ -18,7 +18,7 @@
  ***************************************************************************/
 package com.example.cqrs.demo.config;
 
-import com.example.cqrs.demo.domain.BankAccountAggregate;
+import com.example.cqrs.demo.domain.AccountAggregate;
 import org.axonframework.commandhandling.model.Repository;
 import org.axonframework.eventsourcing.AggregateFactory;
 import org.axonframework.eventsourcing.EventSourcingRepository;
@@ -56,20 +56,20 @@ public class AccountAxonConfig {
 
     @Bean
     @Scope("prototype")
-    public BankAccountAggregate customerAggregate(){
-        return new BankAccountAggregate();
+    public AccountAggregate customerAggregate(){
+        return new AccountAggregate();
     }
 
     @Bean
-    public AggregateFactory<BankAccountAggregate> customerAggregateAggregateFactory(){
-        SpringPrototypeAggregateFactory<BankAccountAggregate> aggregateFactory = new SpringPrototypeAggregateFactory<>();
+    public AggregateFactory<AccountAggregate> accountAggregateFactory(){
+        SpringPrototypeAggregateFactory<AccountAggregate> aggregateFactory = new SpringPrototypeAggregateFactory<>();
         aggregateFactory.setPrototypeBeanName("bankAccountAggregate");
         return aggregateFactory;
     }
 
     @Bean
-    public Repository<BankAccountAggregate> orderAggregateRepository(){
-        return new EventSourcingRepository<>(customerAggregateAggregateFactory(), eventStore);
+    public Repository<AccountAggregate> accountAggregateRepository(){
+        return new EventSourcingRepository<>(accountAggregateFactory(), eventStore);
     }
 
 
