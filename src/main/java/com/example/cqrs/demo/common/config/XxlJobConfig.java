@@ -16,7 +16,7 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.config;
+package com.example.cqrs.demo.common.config;
 
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ import org.springframework.context.annotation.Configuration;
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.config
+ *  Package Name    : com.example.cqrs.demo.common.config
  *
  *  File Name       : XxlJobConfig.java
  *
@@ -46,7 +46,7 @@ import org.springframework.context.annotation.Configuration;
  * </PRE>
  ***************************************************************************/
 @Configuration
-@ComponentScan(basePackages = "com.example.cqrs.demo.job")
+@ComponentScan(basePackages = "com.example.cqrs.demo.command.web.job")
 public class XxlJobConfig {
 
     private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);

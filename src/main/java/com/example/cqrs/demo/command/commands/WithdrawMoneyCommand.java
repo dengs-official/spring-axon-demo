@@ -16,24 +16,27 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.event;
+package com.example.cqrs.demo.command.commands;
 
-import com.example.cqrs.demo.domain.AccountId;
+import com.example.cqrs.demo.common.domain.AccountId;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
 /***************************************************************************
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.event
+ *  Package Name    : com.example.cqrs.demo.command
  *
- *  File Name       : AccountCreatedEvent.java
+ *  File Name       : WithdrawMoneyCommand.java
  *
  *  Creation Date   : 2/18/19
  *
  *  Author          : snowdeng
  *
- *  Purpose         : it used as the account created event
+ *  Purpose         : it used as the operate draw money
  *
  *
  *  History         : 2019-02-18, snowdeng, add this class
@@ -41,14 +44,13 @@ import lombok.Data;
  * </PRE>
  ***************************************************************************/
 @Data
-public class AccountCreatedEvent {
+public class WithdrawMoneyCommand {
 
+    @TargetAggregateIdentifier
     private AccountId accountId;
-    private String accountName;
     private long amount;
-    public AccountCreatedEvent(AccountId accountId, String accountName, long amount) {
+    public WithdrawMoneyCommand(AccountId accountId, long amount) {
         this.accountId = accountId;
-        this.accountName = accountName;
         this.amount = amount;
     }
 }

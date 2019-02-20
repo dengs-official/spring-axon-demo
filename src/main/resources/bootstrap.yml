@@ -1,16 +1,16 @@
 server:
   port: 7010
-spring:
-  application:
-    name: CQRS-DEMO
-  boot:
-    admin:
-      client:
-        url: http://10.160.3.48:9000
-eureka:
-  client:
-    service-url:
-      defaultZone: http://10.160.3.48:8761/eureka/
+#spring:
+#  application:
+#    name: CQRS-DEMO
+#  boot:
+#    admin:
+#      client:
+#        url: http://10.160.3.48:9000
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://10.160.3.48:8761/eureka/
 management:
   endpoints:
     web:

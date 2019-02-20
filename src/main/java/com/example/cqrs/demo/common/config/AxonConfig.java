@@ -16,7 +16,7 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.config;
+package com.example.cqrs.demo.common.config;
 
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
@@ -40,7 +40,7 @@ import java.util.Arrays;
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.config
+ *  Package Name    : com.example.cqrs.demo.common.config
  *
  *  File Name       : ESConfiguration.java
  *
@@ -48,7 +48,7 @@ import java.util.Arrays;
  *
  *  Author          : snowdeng
  *
- *  Purpose         : it used to configure the event sourcing
+ *  Purpose         : it used to configure the events sourcing
  *
  *
  *  History         : 2019-02-18, snowdeng, add this class
@@ -56,7 +56,7 @@ import java.util.Arrays;
  * </PRE>
  ***************************************************************************/
 @Configuration
-public class ESConfigure {
+public class AxonConfig {
 
     @Value("${mongodb.url}")
     private String mongoUrl;

@@ -16,25 +16,25 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.command;
+package com.example.cqrs.demo.command.commands;
 
-import com.example.cqrs.demo.domain.AccountId;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.axonframework.commandhandling.TargetAggregateIdentifier;
+import lombok.NoArgsConstructor;
 
 /***************************************************************************
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.command
+ *  Package Name    : com.example.cqrs.demo.command.commands
  *
- *  File Name       : WithdrawMoneyCommand.java
+ *  File Name       : CreateProductCommand.java
  *
- *  Creation Date   : 2/18/19
+ *  Creation Date   : 2/20/19
  *
  *  Author          : snowdeng
  *
- *  Purpose         : it used as the operate draw money
+ *  Purpose         : it used as the operate create product
  *
  *
  *  History         : 2019-02-18, snowdeng, add this class
@@ -42,13 +42,11 @@ import org.axonframework.commandhandling.TargetAggregateIdentifier;
  * </PRE>
  ***************************************************************************/
 @Data
-public class WithdrawMoneyCommand {
+@AllArgsConstructor
+public class CreateProductCommand {
 
-    @TargetAggregateIdentifier
-    private AccountId accountId;
-    private long amount;
-    public WithdrawMoneyCommand(AccountId accountId, long amount) {
-        this.accountId = accountId;
-        this.amount = amount;
-    }
+    private String id;
+    private String name;
+    private long price;
+    private int stock;
 }

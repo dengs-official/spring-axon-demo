@@ -16,7 +16,7 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.domain;
+package com.example.cqrs.demo.common.domain;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.axonframework.common.IdentifierFactory;
@@ -28,7 +28,7 @@ import java.io.Serializable;
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.domain
+ *  Package Name    : com.example.cqrs.demo.common.domain
  *
  *  File Name       : AccountId.java
  *

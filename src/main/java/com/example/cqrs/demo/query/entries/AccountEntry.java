@@ -16,41 +16,48 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.command;
+package com.example.cqrs.demo.query.entries;
 
-import com.example.cqrs.demo.domain.AccountId;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.math.BigDecimal;
 
 /***************************************************************************
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.command
+ *  Package Name    : com.example.cqrs.demo.query.entries
  *
- *  File Name       : CreateAccountCommand.java
+ *  File Name       : AccountEntry.java
  *
- *  Creation Date   : 2/18/19
+ *  Creation Date   : 2/20/19
  *
  *  Author          : snowdeng
  *
- *  Purpose         : it used as the operate create account
+ *  Purpose         : it used to store the account in database
  *
  *
- *  History         : 2019-02-18, snowdeng, add this class
+ *  History         : 2019-02-20, snowdeng, add this class
  *
  * </PRE>
  ***************************************************************************/
+@Entity
 @Data
-public class CreateAccountCommand {
+@NoArgsConstructor
+@AllArgsConstructor
+public class AccountEntry {
+    @Id
+    private String id;
 
-    private AccountId accountId;
-    private String accountName;
-    private long amount;
+    private String name;
+    private BigDecimal balance;
+    private Integer taskId;
 
-    public CreateAccountCommand(AccountId accountId, String accountName, long amount) {
-        super();
-        this.accountId = accountId;
-        this.accountName = accountName;
-        this.amount = amount;
-    }
+
 }

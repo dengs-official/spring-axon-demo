@@ -16,11 +16,11 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.web;
+package com.example.cqrs.demo.command.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.cqrs.demo.command.CreateAccountCommand;
-import com.example.cqrs.demo.domain.AccountId;
+import com.example.cqrs.demo.command.commands.CreateAccountCommand;
+import com.example.cqrs.demo.common.domain.AccountId;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.web
+ *  Package Name    : com.example.cqrs.demo.command.web
  *
  *  File Name       : BankAccountController.java
  *
@@ -62,7 +62,7 @@ public class AccountController {
     @ApiOperation(value = "Create Bank Account")
     @GetMapping(value = "/create")
     public ResponseEntity<JSONObject> createAccount(@RequestParam String account, @RequestParam Long amount) {
-      log.info("Start to create bank account {}", account);
+      log.info("Start to create account {}", account);
 
       AccountId id = new AccountId();
       ResponseEntity<JSONObject> response = new ResponseEntity<>(HttpStatus.OK);

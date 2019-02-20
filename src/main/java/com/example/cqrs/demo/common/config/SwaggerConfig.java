@@ -16,7 +16,7 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.config;
+package com.example.cqrs.demo.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +33,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.config
+ *  Package Name    : com.example.cqrs.demo.common.config
  *
  *  File Name       : SwaggerConfig.java
  *
@@ -57,7 +57,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.cqrs.demo.web"))
+                .apis(RequestHandlerSelectors.basePackage("com.example.cqrs.demo.command.web"))
                 .paths(PathSelectors.any())
                 .build();
     }

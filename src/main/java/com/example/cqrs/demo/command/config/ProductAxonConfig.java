@@ -16,9 +16,10 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.config;
+package com.example.cqrs.demo.command.config;
 
-import com.example.cqrs.demo.domain.AccountAggregate;
+import com.example.cqrs.demo.command.aggregates.AccountAggregate;
+import com.example.cqrs.demo.command.aggregates.ProductAggregate;
 import org.axonframework.commandhandling.model.Repository;
 import org.axonframework.eventsourcing.AggregateFactory;
 import org.axonframework.eventsourcing.EventSourcingRepository;
@@ -33,15 +34,15 @@ import org.springframework.context.annotation.Scope;
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.config
+ *  Package Name    : com.example.cqrs.demo.command.config
  *
- *  File Name       : AccountAxonConfig.java
+ *  File Name       : ProductAxonConfig.java
  *
- *  Creation Date   : 2/18/19
+ *  Creation Date   : 2/20/19
  *
  *  Author          : snowdeng
  *
- *  Purpose         : it used to configure the bank account aggregate axon setting
+ *  Purpose         : it used to configure the product aggregate axon setting
  *
  *
  *  History         : 2019-02-18, snowdeng, add this class
@@ -49,28 +50,26 @@ import org.springframework.context.annotation.Scope;
  * </PRE>
  ***************************************************************************/
 @Configuration
-public class AccountAxonConfig {
+public class ProductAxonConfig {
 
     @Autowired
     private EventStore eventStore;
 
     @Bean
     @Scope("prototype")
-    public AccountAggregate customerAggregate(){
-        return new AccountAggregate();
+    public ProductAggregate productAggregate(){
+        return new ProductAggregate();
     }
 
     @Bean
-    public AggregateFactory<AccountAggregate> accountAggregateFactory(){
-        SpringPrototypeAggregateFactory<AccountAggregate> aggregateFactory = new SpringPrototypeAggregateFactory<>();
-        aggregateFactory.setPrototypeBeanName("bankAccountAggregate");
+    public AggregateFactory<ProductAggregate> productAggregateFactory(){
+        SpringPrototypeAggregateFactory<ProductAggregate> aggregateFactory = new SpringPrototypeAggregateFactory<>();
+        aggregateFactory.setPrototypeBeanName("productAggregate");
         return aggregateFactory;
     }
 
     @Bean
-    public Repository<AccountAggregate> accountAggregateRepository(){
-        return new EventSourcingRepository<>(accountAggregateFactory(), eventStore);
+    public Repository<ProductAggregate> productAggregateRepository(){
+        return new EventSourcingRepository<>(productAggregateFactory(), eventStore);
     }
-
-
 }

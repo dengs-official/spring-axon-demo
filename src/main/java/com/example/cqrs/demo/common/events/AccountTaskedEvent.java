@@ -16,48 +16,37 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.job;
+package com.example.cqrs.demo.common.events;
 
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.handler.IJobHandler;
-import com.xxl.job.core.handler.annotation.JobHandler;
-import com.xxl.job.core.log.XxlJobLogger;
-import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
+import com.example.cqrs.demo.common.domain.AccountId;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /***************************************************************************
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.job
+ *  Package Name    : com.example.cqrs.demo.common.events
  *
- *  File Name       : WithdrawMoneyJobHandler.java
+ *  File Name       : AccountTaskedEvent.java
  *
- *  Creation Date   : 2/19/19
+ *  Creation Date   : 2/20/19
  *
  *  Author          : snowdeng
  *
- *  Purpose         : it used to run the bank account business job
+ *  Purpose         : it used as the account tasked events
  *
  *
- *  History         : 2019-02-19, snowdeng, add this class.
+ *  History         : 2019-02-18, snowdeng, add this class
+ *
  *
  * </PRE>
  ***************************************************************************/
-@JobHandler(value = "WithdrawMoneyJobHandler")
-@Component
-public class WithdrawMoneyJobHandler extends IJobHandler {
+@Data
+@AllArgsConstructor
+public class AccountTaskedEvent {
 
+    private AccountId accountId;
+    private Integer taskId;
 
-    @Override
-    public ReturnT<String> execute(String s) throws Exception {
-        XxlJobLogger.log("Start to Draw Money");
-
-        for (int i = 0; i < 5; i++) {
-            XxlJobLogger.log("beat at:" + i);
-            TimeUnit.SECONDS.sleep(2);
-        }
-        return SUCCESS;
-    }
 }

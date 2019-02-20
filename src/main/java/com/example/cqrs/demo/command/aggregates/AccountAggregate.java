@@ -16,12 +16,13 @@
  *  Facsimile       (852) 27764515
  *
  ***************************************************************************/
-package com.example.cqrs.demo.domain;
+package com.example.cqrs.demo.command.aggregates;
 
-import com.example.cqrs.demo.command.CreateAccountCommand;
-import com.example.cqrs.demo.command.WithdrawMoneyCommand;
-import com.example.cqrs.demo.event.AccountCreatedEvent;
-import com.example.cqrs.demo.event.MoneyWithdrawnEvent;
+import com.example.cqrs.demo.command.commands.CreateAccountCommand;
+import com.example.cqrs.demo.command.commands.WithdrawMoneyCommand;
+import com.example.cqrs.demo.common.domain.AccountId;
+import com.example.cqrs.demo.common.events.AccountCreatedEvent;
+import com.example.cqrs.demo.common.events.MoneyWithdrawnEvent;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
@@ -37,7 +38,7 @@ import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
  * <PRE>
  *  Project Name    : cqrs-demo
  *
- *  Package Name    : com.example.cqrs.demo.domain
+ *  Package Name    : com.example.cqrs.demo.command.aggregates
  *
  *  File Name       : BankAccount.java
  *
@@ -59,8 +60,9 @@ public class AccountAggregate {
 
     @AggregateIdentifier
     private AccountId accountId;
-    private String accountName;
+    private String name;
     private BigDecimal balance;
+    private Integer taskId;
 
     public AccountAggregate() {
         super();
@@ -68,7 +70,7 @@ public class AccountAggregate {
 
     @CommandHandler
     public AccountAggregate(CreateAccountCommand command) {
-        log.debug("Construct a new BankAccount");
+        log.debug("Construct a new Account");
         apply(new AccountCreatedEvent(command.getAccountId(), command.getAccountName(), command.getAmount()));
     }
 
@@ -79,10 +81,12 @@ public class AccountAggregate {
 
     @EventHandler
     public void on(AccountCreatedEvent event){
+        log.info("After Create Event, Begin to update the aggregate");
         this.accountId = event.getAccountId();
-        this.accountName = event.getAccountName();
+        this.name = event.getAccountName();
         this.balance = new BigDecimal(event.getAmount());
         log.info("Account {} is created with balance {}", accountId, this.balance);
+
     }
 
     @EventHandler
