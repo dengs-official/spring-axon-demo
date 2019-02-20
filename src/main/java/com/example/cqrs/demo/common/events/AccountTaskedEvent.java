@@ -43,10 +43,14 @@ import lombok.Data;
  * </PRE>
  ***************************************************************************/
 @Data
-@AllArgsConstructor
 public class AccountTaskedEvent {
 
     private AccountId accountId;
     private Integer taskId;
+
+    public AccountTaskedEvent(AccountId accountId, Integer taskId) {
+        this.accountId = accountId;
+        this.taskId = taskId;
+    }
 
 }

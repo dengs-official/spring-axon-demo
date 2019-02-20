@@ -20,6 +20,7 @@ package com.example.cqrs.demo.command.commands;
 
 import com.example.cqrs.demo.common.domain.AccountId;
 import lombok.Data;
+import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
 /***************************************************************************
  * <PRE>
@@ -43,14 +44,14 @@ import lombok.Data;
 @Data
 public class CreateAccountCommand {
 
+    @TargetAggregateIdentifier
     private AccountId accountId;
-    private String accountName;
-    private long amount;
+    private String name;
+    private long balance;
 
-    public CreateAccountCommand(AccountId accountId, String accountName, long amount) {
-        super();
-        this.accountId = accountId;
-        this.accountName = accountName;
-        this.amount = amount;
+    public CreateAccountCommand(String name, long balance) {
+        this.accountId = new AccountId();
+        this.name = name;
+        this.balance = balance;
     }
 }

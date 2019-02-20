@@ -20,6 +20,8 @@ package com.example.cqrs.demo.command.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.cqrs.demo.command.commands.CreateAccountCommand;
+import com.example.cqrs.demo.command.commands.TaskAccountCommand;
+import com.example.cqrs.demo.command.commands.WithdrawMoneyCommand;
 import com.example.cqrs.demo.common.domain.AccountId;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -61,24 +63,56 @@ public class AccountController {
 
     @ApiOperation(value = "Create Bank Account")
     @GetMapping(value = "/create")
-    public ResponseEntity<JSONObject> createAccount(@RequestParam String account, @RequestParam Long amount) {
-      log.info("Start to create account {}", account);
+    public ResponseEntity<JSONObject> createAccount(@RequestParam String name, @RequestParam Long balance) {
+      log.info("Start to create account {}", name);
 
-      AccountId id = new AccountId();
-      ResponseEntity<JSONObject> response = new ResponseEntity<>(HttpStatus.OK);
+      ResponseEntity<JSONObject> response;
       JSONObject result = new JSONObject();
       try {
-          result.put("data", commandGateway.sendAndWait(new CreateAccountCommand(id, account, amount)));
+          result.put("data", commandGateway.sendAndWait(new CreateAccountCommand(name, balance)));
+          response = new ResponseEntity<>(result, HttpStatus.OK);
       } catch (Exception e) {
           log.error("When create account occur error", e);
           result.put("message", e);
           response = new ResponseEntity<>(result, HttpStatus.NOT_ACCEPTABLE);
-      } finally {
-          if (!response.hasBody()) {
-              response = new ResponseEntity<>(result, HttpStatus.OK);
-          }
       }
       return response;
+    }
+
+    @ApiOperation(value = "Task Bank Account")
+    @GetMapping(value = "/task")
+    public ResponseEntity<JSONObject> taskAccount(@RequestParam String id, @RequestParam Long balance) {
+        log.info("Start to task account {}", id);
+
+        ResponseEntity<JSONObject> response;
+        JSONObject result = new JSONObject();
+        try {
+            result.put("data", commandGateway.sendAndWait(new TaskAccountCommand(new AccountId(id), balance)));
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("When task account occur error", e);
+            result.put("message", e);
+            response = new ResponseEntity<>(result, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return response;
+    }
+
+    @ApiOperation(value = "Draw Bank Account Balance")
+    @GetMapping(value = "/draw")
+    public ResponseEntity<JSONObject> drawBalance(@RequestParam String id, @RequestParam Long balance) {
+        log.info("Start to draw account balance {}", id);
+
+        ResponseEntity<JSONObject> response;
+        JSONObject result = new JSONObject();
+        try {
+            result.put("data", commandGateway.sendAndWait(new WithdrawMoneyCommand(new AccountId(id), balance)));
+            response = new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("When draw money occur error", e);
+            result.put("message", e);
+            response = new ResponseEntity<>(result, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return response;
     }
 
 

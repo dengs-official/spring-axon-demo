@@ -49,7 +49,7 @@ import java.math.BigDecimal;
  ***************************************************************************/
 @Component
 @Slf4j
-public class AccountHandler {
+public class AccountEventHandler {
 
     @Autowired
     private AccountRepository repository;
@@ -57,6 +57,6 @@ public class AccountHandler {
     @EventHandler
     public void on(AccountCreatedEvent event) {
         log.info("After Create Command, Begin to save account into mysql for query");
-        repository.save(new AccountEntry(event.getAccountId().toString(), event.getAccountName(), new BigDecimal(event.getAmount())));
+        repository.save(new AccountEntry(event.getAccountId().toString(), event.getName(), new BigDecimal(event.getBalance()), null));
     }
 }

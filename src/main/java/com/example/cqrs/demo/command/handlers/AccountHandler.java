@@ -19,7 +19,11 @@
 package com.example.cqrs.demo.command.handlers;
 
 import com.example.cqrs.demo.command.aggregates.AccountAggregate;
+import com.example.cqrs.demo.command.commands.TaskAccountCommand;
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.commandhandling.CommandHandler;
+import org.axonframework.commandhandling.model.Aggregate;
+import org.axonframework.commandhandling.model.AggregateNotFoundException;
 import org.axonframework.commandhandling.model.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,5 +53,19 @@ public class AccountHandler {
 
     @Autowired
     private Repository<AccountAggregate> repository;
+
+    @CommandHandler
+    public void handle(TaskAccountCommand command) {
+        log.info("Task account {}", command.getAccountId().toString());
+        try {
+            Aggregate<AccountAggregate> aggregate = repository.load(command.getAccountId().toString());
+            Integer taskId = 183008;
+            aggregate.execute(aggregateRoot -> {
+                aggregateRoot.setTaskId(taskId);
+            });
+        } catch (AggregateNotFoundException e) {
+            log.error("The to be task account not exist");
+        }
+    }
     
 }

@@ -44,11 +44,11 @@ import lombok.Data;
 public class AccountCreatedEvent {
 
     private AccountId accountId;
-    private String accountName;
-    private long amount;
-    public AccountCreatedEvent(AccountId accountId, String accountName, long amount) {
+    private String name;
+    private long balance;
+    public AccountCreatedEvent(AccountId accountId, String name, long balance) {
         this.accountId = accountId;
-        this.accountName = accountName;
-        this.amount = amount;
+        this.name = name;
+        this.balance = balance;
     }
 }

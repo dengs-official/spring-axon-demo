@@ -44,11 +44,11 @@ import lombok.Data;
 public class MoneyWithdrawnEvent {
 
     private AccountId accountId;
-    private long amount;
+    private long balance;
 
-    public MoneyWithdrawnEvent(AccountId accountId, long amount) {
+    public MoneyWithdrawnEvent(AccountId accountId, long balance) {
         this.accountId = accountId;
-        this.amount = amount;
+        this.balance = balance;
     }
 
 }

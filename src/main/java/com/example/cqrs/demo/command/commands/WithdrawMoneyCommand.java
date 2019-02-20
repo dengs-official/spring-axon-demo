@@ -48,9 +48,9 @@ public class WithdrawMoneyCommand {
 
     @TargetAggregateIdentifier
     private AccountId accountId;
-    private long amount;
-    public WithdrawMoneyCommand(AccountId accountId, long amount) {
+    private long balance;
+    public WithdrawMoneyCommand(AccountId accountId, long balance) {
         this.accountId = accountId;
-        this.amount = amount;
+        this.balance = balance;
     }
 }

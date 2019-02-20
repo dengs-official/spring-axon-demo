@@ -21,6 +21,7 @@ package com.example.cqrs.demo.command.commands;
 import com.example.cqrs.demo.common.domain.AccountId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
 /***************************************************************************
  * <PRE>
@@ -44,7 +45,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class TaskAccountCommand {
+
+    @TargetAggregateIdentifier
     private AccountId accountId;
-    private String accountName;
-    private long amount;
+    private long balance;
 }

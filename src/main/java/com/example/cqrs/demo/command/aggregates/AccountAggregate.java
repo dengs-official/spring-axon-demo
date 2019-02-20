@@ -22,6 +22,7 @@ import com.example.cqrs.demo.command.commands.CreateAccountCommand;
 import com.example.cqrs.demo.command.commands.WithdrawMoneyCommand;
 import com.example.cqrs.demo.common.domain.AccountId;
 import com.example.cqrs.demo.common.events.AccountCreatedEvent;
+import com.example.cqrs.demo.common.events.AccountTaskedEvent;
 import com.example.cqrs.demo.common.events.MoneyWithdrawnEvent;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -71,32 +72,39 @@ public class AccountAggregate {
     @CommandHandler
     public AccountAggregate(CreateAccountCommand command) {
         log.debug("Construct a new Account");
-        apply(new AccountCreatedEvent(command.getAccountId(), command.getAccountName(), command.getAmount()));
+        apply(new AccountCreatedEvent(command.getAccountId(), command.getName(), command.getBalance()));
     }
 
     @CommandHandler
     public void handle(WithdrawMoneyCommand command){
-        apply(new MoneyWithdrawnEvent(command.getAccountId(), command.getAmount()));
+        apply(new MoneyWithdrawnEvent(command.getAccountId(), command.getBalance()));
     }
 
     @EventHandler
     public void on(AccountCreatedEvent event){
         log.info("After Create Event, Begin to update the aggregate");
         this.accountId = event.getAccountId();
-        this.name = event.getAccountName();
-        this.balance = new BigDecimal(event.getAmount());
+        this.name = event.getName();
+        this.balance = new BigDecimal(event.getBalance());
         log.info("Account {} is created with balance {}", accountId, this.balance);
 
     }
 
     @EventHandler
+    public void on(AccountTaskedEvent event) {
+        log.info("After Task Event, Begin to update the aggregate");
+        this.taskId = event.getTaskId();
+        log.info("Account {} is tasked with task {}", accountId, this.taskId);
+    }
+
+    @EventHandler
     public void on(MoneyWithdrawnEvent event){
-        BigDecimal result = this.balance.subtract(new BigDecimal(event.getAmount()));
+        BigDecimal result = this.balance.subtract(new BigDecimal(event.getBalance()));
         if(result.compareTo(BigDecimal.ZERO)<0)
             log.error("Cannot withdraw more money than the balance!");
         else {
             this.balance = result;
-            log.info("Withdraw {} from account {}, balance result: {}", event.getAmount(), accountId, balance);
+            log.info("Withdraw {} from account {}, balance result: {}", event.getBalance(), accountId, balance);
         }
     }
 }
