@@ -71,18 +71,18 @@ public class AccountAggregate {
 
     @CommandHandler
     public AccountAggregate(CreateAccountCommand command) {
-        log.debug("Construct a new Account");
+        log.info("Construct a new Account");
         apply(new AccountCreatedEvent(command.getAccountId(), command.getName(), command.getBalance()));
     }
 
     @CommandHandler
     public void handle(WithdrawMoneyCommand command){
+        log.info("Draw the account money, current balance is: {}", this.balance);
         apply(new MoneyWithdrawnEvent(command.getAccountId(), command.getBalance()));
     }
 
     @EventHandler
     public void on(AccountCreatedEvent event){
-        log.info("After Create Event, Begin to update the aggregate");
         this.accountId = event.getAccountId();
         this.name = event.getName();
         this.balance = new BigDecimal(event.getBalance());
@@ -92,7 +92,6 @@ public class AccountAggregate {
 
     @EventHandler
     public void on(AccountTaskedEvent event) {
-        log.info("After Task Event, Begin to update the aggregate");
         this.taskId = event.getTaskId();
         log.info("Account {} is tasked with task {}", accountId, this.taskId);
     }

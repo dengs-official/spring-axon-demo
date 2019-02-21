@@ -18,10 +18,16 @@
  ***************************************************************************/
 package com.example.cqrs.demo.query.handlers;
 
+import com.example.cqrs.demo.command.aggregates.AccountAggregate;
+import com.example.cqrs.demo.command.commands.WithdrawMoneyCommand;
 import com.example.cqrs.demo.common.events.AccountCreatedEvent;
+import com.example.cqrs.demo.common.events.AccountTaskedEvent;
+import com.example.cqrs.demo.common.events.MoneyWithdrawnEvent;
 import com.example.cqrs.demo.query.entries.AccountEntry;
 import com.example.cqrs.demo.query.repository.AccountRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.commandhandling.model.Aggregate;
+import org.axonframework.commandhandling.model.Repository;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,11 +58,32 @@ import java.math.BigDecimal;
 public class AccountEventHandler {
 
     @Autowired
-    private AccountRepository repository;
+    private AccountRepository dao;
+
+    @Autowired
+    private Repository<AccountAggregate> repository;
 
     @EventHandler
     public void on(AccountCreatedEvent event) {
-        log.info("After Create Command, Begin to save account into mysql for query");
-        repository.save(new AccountEntry(event.getAccountId().toString(), event.getName(), new BigDecimal(event.getBalance()), null));
+        dao.save(new AccountEntry(event.getAccountId().toString(), event.getName(), new BigDecimal(event.getBalance()), null));
+        log.info("account saved into mysql for query");
+    }
+
+    @EventHandler
+    public void on(MoneyWithdrawnEvent event) {
+        Aggregate<AccountAggregate> aggregate = repository.load(event.getAccountId().toString());
+        aggregate.execute(accountAggregate -> {
+            dao.save(new AccountEntry(accountAggregate.getAccountId().toString(), accountAggregate.getName(), accountAggregate.getBalance(), accountAggregate.getTaskId()));
+        });
+        log.info("account balance update into mysql for query");
+    }
+
+    @EventHandler
+    public void on(AccountTaskedEvent event) {
+        Aggregate<AccountAggregate> aggregate = repository.load(event.getAccountId().toString());
+        aggregate.execute(accountAggregate -> {
+            dao.save(new AccountEntry(accountAggregate.getAccountId().toString(), accountAggregate.getName(), accountAggregate.getBalance(), accountAggregate.getTaskId()));
+        });
+        log.info("account task id update into mysql for query");
     }
 }
