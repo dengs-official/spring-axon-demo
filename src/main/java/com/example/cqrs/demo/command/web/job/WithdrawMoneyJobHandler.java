@@ -18,10 +18,15 @@
  ***************************************************************************/
 package com.example.cqrs.demo.command.web.job;
 
+import com.alibaba.fastjson.JSONObject;
+import com.example.cqrs.demo.command.commands.WithdrawMoneyCommand;
+import com.example.cqrs.demo.common.domain.AccountId;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobLogger;
+import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -49,15 +54,20 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class WithdrawMoneyJobHandler extends IJobHandler {
 
+    @Autowired
+    public CommandGateway commandGateway;
 
     @Override
     public ReturnT<String> execute(String s) throws Exception {
         XxlJobLogger.log("Start to Draw Money");
-
-        for (int i = 0; i < 5; i++) {
-            XxlJobLogger.log("beat at:" + i);
-            TimeUnit.SECONDS.sleep(2);
+        JSONObject object = JSONObject.parseObject(s);
+        try {
+            commandGateway.sendAndWait(new WithdrawMoneyCommand(new AccountId(object.getString("id")), object.getLong("balance")));
+        } catch (Exception e) {
+            XxlJobLogger.log("Draw account {} money occur exception ", e);
+            return FAIL;
         }
+
         return SUCCESS;
     }
 }

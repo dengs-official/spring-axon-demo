@@ -24,6 +24,7 @@ import com.example.cqrs.demo.common.domain.AccountId;
 import com.example.cqrs.demo.common.events.AccountCreatedEvent;
 import com.example.cqrs.demo.common.events.AccountTaskedEvent;
 import com.example.cqrs.demo.common.events.MoneyWithdrawnEvent;
+import com.xxl.job.core.log.XxlJobLogger;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
@@ -75,12 +76,6 @@ public class AccountAggregate {
         apply(new AccountCreatedEvent(command.getAccountId(), command.getName(), command.getBalance()));
     }
 
-    @CommandHandler
-    public void handle(WithdrawMoneyCommand command){
-        log.info("Draw the account money, current balance is: {}", this.balance);
-        apply(new MoneyWithdrawnEvent(command.getAccountId(), command.getBalance()));
-    }
-
     @EventHandler
     public void on(AccountCreatedEvent event){
         this.accountId = event.getAccountId();
@@ -98,12 +93,8 @@ public class AccountAggregate {
 
     @EventHandler
     public void on(MoneyWithdrawnEvent event){
-        BigDecimal result = this.balance.subtract(new BigDecimal(event.getBalance()));
-        if(result.compareTo(BigDecimal.ZERO)<0)
-            log.error("Cannot withdraw more money than the balance!");
-        else {
-            this.balance = result;
-            log.info("Withdraw {} from account {}, balance result: {}", event.getBalance(), accountId, balance);
-        }
+        this.balance = this.balance.subtract(new BigDecimal(event.getBalance()));
+        log.info("Withdraw {} from account {}, balance result: {}", event.getBalance(), accountId, balance);
+        XxlJobLogger.log("Withdraw {} from account {}, balance result: {}", event.getBalance(), accountId, balance);
     }
 }

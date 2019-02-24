@@ -19,7 +19,6 @@
 package com.example.cqrs.demo.query.handlers;
 
 import com.example.cqrs.demo.command.aggregates.AccountAggregate;
-import com.example.cqrs.demo.command.commands.WithdrawMoneyCommand;
 import com.example.cqrs.demo.common.events.AccountCreatedEvent;
 import com.example.cqrs.demo.common.events.AccountTaskedEvent;
 import com.example.cqrs.demo.common.events.MoneyWithdrawnEvent;
@@ -71,19 +70,20 @@ public class AccountEventHandler {
 
     @EventHandler
     public void on(MoneyWithdrawnEvent event) {
-        Aggregate<AccountAggregate> aggregate = repository.load(event.getAccountId().toString());
-        aggregate.execute(accountAggregate -> {
-            dao.save(new AccountEntry(accountAggregate.getAccountId().toString(), accountAggregate.getName(), accountAggregate.getBalance(), accountAggregate.getTaskId()));
-        });
+        update(event.getAccountId().toString());
         log.info("account balance update into mysql for query");
     }
 
     @EventHandler
     public void on(AccountTaskedEvent event) {
-        Aggregate<AccountAggregate> aggregate = repository.load(event.getAccountId().toString());
+        update(event.getAccountId().toString());
+        log.info("account task id update into mysql for query");
+    }
+
+    private void update(String id) {
+        Aggregate<AccountAggregate> aggregate = repository.load(id);
         aggregate.execute(accountAggregate -> {
             dao.save(new AccountEntry(accountAggregate.getAccountId().toString(), accountAggregate.getName(), accountAggregate.getBalance(), accountAggregate.getTaskId()));
         });
-        log.info("account task id update into mysql for query");
     }
 }

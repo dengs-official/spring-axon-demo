@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
  *
  *  Package Name    : com.example.cqrs.demo.common.config
  *
- *  File Name       : XxlJobConfig.java
+ *  File Name       : XxlJobRibbonConfig.java
  *
  *  Creation Date   : 2/19/19
  *
@@ -51,8 +51,8 @@ public class XxlJobConfig {
 
     private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
 
-    @Value("${xxl.job.admin.addresses}")
-    private String adminAddresses;
+    @Value("${xxl.job.executor.addresses}")
+    private String addresses;
 
     @Value("${xxl.job.executor.appname}")
     private String appName;
@@ -77,7 +77,7 @@ public class XxlJobConfig {
     public XxlJobSpringExecutor xxlJobExecutor() {
         logger.info(">>>>>>>>>>> xxl-job config init.");
         XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
-        xxlJobSpringExecutor.setAdminAddresses(adminAddresses);
+        xxlJobSpringExecutor.setAdminAddresses(addresses);
         xxlJobSpringExecutor.setAppName(appName);
         xxlJobSpringExecutor.setIp(ip);
         xxlJobSpringExecutor.setPort(port);
