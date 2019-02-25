@@ -23,7 +23,6 @@ import com.example.cqrs.demo.command.commands.CreateAccountCommand;
 import com.example.cqrs.demo.command.commands.TaskAccountCommand;
 import com.example.cqrs.demo.command.commands.WithdrawMoneyCommand;
 import com.example.cqrs.demo.common.domain.AccountId;
-import com.example.cqrs.demo.common.xxljob.XxlJobFeignClient;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -61,9 +60,6 @@ public class AccountController {
 
     @Autowired
     public CommandGateway commandGateway;
-
-    @Autowired
-    private XxlJobFeignClient client;
 
     @ApiOperation(value = "Create Bank Account")
     @GetMapping(value = "/create")
@@ -117,13 +113,6 @@ public class AccountController {
             response = new ResponseEntity<>(result, HttpStatus.NOT_ACCEPTABLE);
         }
         return response;
-    }
-
-    @GetMapping(value = "/test")
-    public ResponseEntity<JSONObject> test(@RequestParam Integer jobGroup) {
-        log.info("Start to get the jobList", jobGroup);
-        log.info(client.pageList(jobGroup).toString());
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

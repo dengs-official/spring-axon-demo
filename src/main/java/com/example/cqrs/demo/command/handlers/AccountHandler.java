@@ -24,7 +24,7 @@ import com.example.cqrs.demo.command.commands.TaskAccountCommand;
 import com.example.cqrs.demo.command.commands.WithdrawMoneyCommand;
 import com.example.cqrs.demo.common.events.AccountTaskedEvent;
 import com.example.cqrs.demo.common.events.MoneyWithdrawnEvent;
-import com.example.cqrs.demo.common.xxljob.XxlJobFeignClient;
+import com.example.cqrs.demo.common.xxljob.XxlJobService;
 import com.xxl.job.core.log.XxlJobLogger;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
@@ -67,7 +67,7 @@ public class AccountHandler {
     private Repository<AccountAggregate> repository;
 
     @Autowired
-    private XxlJobFeignClient client;
+    private XxlJobService service;
 
     @CommandHandler
     public void handle(TaskAccountCommand command) {
@@ -76,11 +76,11 @@ public class AccountHandler {
             Aggregate<AccountAggregate> aggregate = repository.load(command.getAccountId().toString());
             aggregate.execute(accountAggregate -> {
                 // create a task in the xxl-job-admin
-                JSONObject create = client.add(genXxlJob(accountAggregate.getName(), command.getAccountId().toString(), command.getBalance()));
+                JSONObject create = service.add(genXxlJob(accountAggregate.getName(), command.getAccountId().toString(), command.getBalance()));
                 log.info("the create result is: {}", create);
                 if (create.getIntValue("code") == 200) {
                     Integer taskId = create.getInteger("content");
-                    JSONObject start = client.start(taskId);
+                    JSONObject start = service.start(taskId);
                     log.info("the start result is: {}", start);
                     if (start.getIntValue("code") == 200) {
                         apply(new AccountTaskedEvent(command.getAccountId(), taskId));
@@ -105,7 +105,7 @@ public class AccountHandler {
                 } else {
                     log.info("The account balance {} not enough to draw, stop the task");
                     XxlJobLogger.log("The account balance {} not enough to draw, stop the task");
-                    JSONObject object = client.stop(accountAggregate.getTaskId());
+                    JSONObject object = service.stop(accountAggregate.getTaskId());
                     log.info("the object is: {}", object);
                 }
             });

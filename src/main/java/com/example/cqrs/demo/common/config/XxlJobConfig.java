@@ -18,10 +18,18 @@
  ***************************************************************************/
 package com.example.cqrs.demo.common.config;
 
+import com.example.cqrs.demo.common.xxljob.XxlJobService;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
+import feign.Feign;
+import feign.form.FormEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.cloud.openfeign.support.SpringDecoder;
+import org.springframework.cloud.openfeign.support.SpringEncoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -49,10 +57,16 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = "com.example.cqrs.demo.command.web.job")
 public class XxlJobConfig {
 
+    @Autowired
+    private ObjectFactory<HttpMessageConverters> messageConverters;
+
     private Logger logger = LoggerFactory.getLogger(XxlJobConfig.class);
 
-    @Value("${xxl.job.executor.addresses}")
-    private String addresses;
+    @Value("${xxl.job.admin.addresses}")
+    private String adminAddresses;
+
+    @Value("${xxl.job.admin.appname}")
+    private String adminAppName;
 
     @Value("${xxl.job.executor.appname}")
     private String appName;
@@ -77,7 +91,7 @@ public class XxlJobConfig {
     public XxlJobSpringExecutor xxlJobExecutor() {
         logger.info(">>>>>>>>>>> xxl-job config init.");
         XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
-        xxlJobSpringExecutor.setAdminAddresses(addresses);
+        xxlJobSpringExecutor.setAdminAddresses(adminAddresses + adminAppName);
         xxlJobSpringExecutor.setAppName(appName);
         xxlJobSpringExecutor.setIp(ip);
         xxlJobSpringExecutor.setPort(port);
@@ -86,5 +100,14 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
 
         return xxlJobSpringExecutor;
+    }
+
+    //define feign client
+    @Bean
+    public XxlJobService xxlJobService() {
+        return Feign.builder()
+                .encoder(new FormEncoder(new SpringEncoder(this.messageConverters)))
+                .decoder(new SpringDecoder(this.messageConverters))
+                .target(XxlJobService.class, adminAddresses);
     }
 }
