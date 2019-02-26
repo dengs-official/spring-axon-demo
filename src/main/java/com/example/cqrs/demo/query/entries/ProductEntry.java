@@ -52,6 +52,8 @@ public class ProductEntry {
     @Id
     private String id;
     private String name;
-    private int stock;
-    private long price;
+    private Integer stock;
+    private Long price;
+    private Integer taskId;
+    private Integer times;
 }

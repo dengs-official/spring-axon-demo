@@ -64,7 +64,11 @@ public class AccountEventHandler {
 
     @EventHandler
     public void on(AccountCreatedEvent event) {
-        dao.save(new AccountEntry(event.getAccountId().toString(), event.getName(), new BigDecimal(event.getBalance()), null));
+        dao.save(new AccountEntry(
+                event.getAccountId().toString(),
+                event.getName(),
+                new BigDecimal(event.getBalance()),
+                null));
         log.info("account saved into mysql for query");
     }
 
@@ -83,7 +87,11 @@ public class AccountEventHandler {
     private void update(String id) {
         Aggregate<AccountAggregate> aggregate = repository.load(id);
         aggregate.execute(accountAggregate -> {
-            dao.save(new AccountEntry(accountAggregate.getAccountId().toString(), accountAggregate.getName(), accountAggregate.getBalance(), accountAggregate.getTaskId()));
+            dao.save(new AccountEntry(
+                    accountAggregate.getAccountId().toString(),
+                    accountAggregate.getName(),
+                    accountAggregate.getBalance(),
+                    accountAggregate.getTaskId()));
         });
     }
 }

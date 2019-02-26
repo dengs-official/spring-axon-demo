@@ -58,6 +58,8 @@ public class ProductAggregate {
     private String name;
     private int stock;
     private long price;
+    private int taskId;
+    private int times;
 
     public ProductAggregate() {
         super();
