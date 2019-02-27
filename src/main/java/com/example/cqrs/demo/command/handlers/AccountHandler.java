@@ -95,16 +95,18 @@ public class AccountHandler {
     @CommandHandler
     public void handle(WithdrawMoneyCommand command){
         log.info("Draw account {} money with balance {}", command.getAccountId().toString(), command.getBalance());
-        XxlJobLogger.log("Draw account {} money with balance {}", command.getAccountId().toString(), command.getBalance());
+        XxlJobLogger.log("Draw account {} money with balance {}", command.getAccountId(), command.getBalance());
         try {
             Aggregate<AccountAggregate> aggregate = repository.load(command.getAccountId().toString());
             aggregate.execute(accountAggregate -> {
                 BigDecimal result = accountAggregate.getBalance().subtract(new BigDecimal(command.getBalance()));
                 if (result.compareTo(BigDecimal.ZERO) > 0) {
+                    log.info("Withdraw {} from account {}, balance result: {}", command.getBalance(), command.getAccountId(), result);
+                    XxlJobLogger.log("Withdraw {} from account {}, balance result: {}", command.getBalance(), command.getAccountId(), result);
                     apply(new MoneyWithdrawnEvent(command.getAccountId(), command.getBalance()));
                 } else {
-                    log.info("The account balance {} not enough to draw, stop the task");
-                    XxlJobLogger.log("The account balance {} not enough to draw, stop the task");
+                    log.info("The account balance {} not enough to draw, stop the task", accountAggregate.getBalance());
+                    XxlJobLogger.log("The account balance {} not enough to draw, stop the task", accountAggregate.getBalance());
                     JSONObject object = service.stop(accountAggregate.getTaskId());
                     log.info("the object is: {}", object);
                 }

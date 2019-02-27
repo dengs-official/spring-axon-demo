@@ -94,7 +94,6 @@ public class AccountAggregate {
     @EventHandler
     public void on(MoneyWithdrawnEvent event){
         this.balance = this.balance.subtract(new BigDecimal(event.getBalance()));
-        log.info("Withdraw {} from account {}, balance result: {}", event.getBalance(), accountId, balance);
-        XxlJobLogger.log("Withdraw {} from account {}, balance result: {}", event.getBalance(), accountId, balance);
+
     }
 }
